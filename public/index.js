@@ -86,8 +86,18 @@ window.addEventListener("load", async () => {
 		"://" +
 		location.host +
 		"/wisp/";
-	if ((await connection.getTransport()) !== "/libcurl/index.mjs") {
-		await connection.setTransport("/libcurl/index.mjs", [{ websocket: wispUrl }]);
+
+	// Always set transport before navigating
+	await connection.setTransport("/libcurl/index.mjs", [{ websocket: wispUrl }]);
+
+	// Wait until transport is confirmed ready
+	let attempts = 0;
+	while ((await connection.getTransport()) !== "/libcurl/index.mjs") {
+		if (attempts++ > 20) {
+			error.textContent = "Transport failed to initialize.";
+			return;
+		}
+		await new Promise((r) => setTimeout(r, 200));
 	}
 
 	const frame = scramjet.createFrame();
