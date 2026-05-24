@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no" />
-		<title>Scramjet</title>
+		<title>Areoy Proxy</title>
 		<link rel="shortcut icon" content="favicon.webp" />
 		<script src="/scram/scramjet.all.js"></script>
 		<script src="/baremux/index.js"></script>
@@ -13,36 +13,44 @@
 		<script src="index.js" defer></script>
 	</head>
 	<body>
-		<div title="Scramjet Logo" class="flex-center logo-wrapper header-center">
-			<img class="logo" src="sj.png" alt="Scramjet" />
-			<h1>Scramjet | MW</h1>
-		</div>
-		<div class="flex-center desc left-margin">
-			<p>
-				Scramjet is an experimental interception based web proxy designed to
-				evade internet censorship, bypass arbitrary web browser restrictions and
-				innovate web proxy technologies.
-			</p>
+		<div class="main-wrapper">
+			<h1 class="site-title">Areoy Proxy</h1>
+
+			<form id="sj-form" class="search-wrapper">
+				<input id="sj-search-engine" value="https://duckduckgo.com/?q=%s" type="hidden" />
+				<input id="sj-address" type="text" placeholder="search..." />
+			</form>
+
+			<div class="error-wrapper">
+				<p id="sj-error"></p>
+				<pre id="sj-error-code"></pre>
+			</div>
+
+			<div class="quick-apps">
+				<div class="quick-apps-header">
+					<span class="quick-apps-label">Quick apps</span>
+					<button class="edit-btn" id="edit-toggle">Edit</button>
+				</div>
+				<div class="apps-grid" id="apps-grid"></div>
+
+				<!-- Add form -->
+				<div class="add-form" id="add-form" style="display:none;">
+					<div class="add-form-row">
+						<label>Name</label>
+						<input type="text" id="add-name" placeholder="My App" />
+					</div>
+					<div class="add-form-row">
+						<label>URL</label>
+						<input type="text" id="add-url" placeholder="https://example.com" />
+					</div>
+					<div class="add-form-actions">
+						<button class="cancel-btn" id="add-cancel">Cancel</button>
+						<button class="save-btn" id="add-save">Save</button>
+					</div>
+				</div>
+			</div>
 		</div>
 
-		<form id="sj-form" class="flex-center">
-			<input id="sj-search-engine" value="https://duckduckgo.com/?q=%s" type="hidden" />
-			<input id="sj-address" type="text" placeholder="Search the web freely" />
-		</form>
-		<div class="desc left-margin">
-			<p id="sj-error"></p>
-			<pre id="sj-error-code"></pre>
-		</div>
-
-		<footer>
-			<div>
-				<a title="The Mercury Workshop GitHub organization" href="https://github.com/MercuryWorkshop">Mercury Workshop</a>
-				<a title="The example demo app for Scramjet" href="https://github.com/MercuryWorkshop/Scramjet-Demo">GitHub</a>
-				<a title="License information" href="credits.html">Credits</a>
-			</div>
-			<div>
-				<span>Scramjet &copy; MW 2025</span>
-			</div>
-		</footer>
+		<script src="apps.js"></script>
 	</body>
 </html>
