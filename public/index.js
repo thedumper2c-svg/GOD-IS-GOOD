@@ -29,30 +29,21 @@ const scramjet = new ScramjetController({
 });
 scramjet.init();
 const connection = new BareMux.BareMuxConnection("/baremux/worker.js");
-form.addEventListener("submit", async (event) => {
+
+function goToSite(input) {
+	if (!input) return;
+	const encoded = btoa(input);
+	const route = `/search?query=${encodeURIComponent(encoded)}&v="1"`;
+	const link = `${location.origin}/?route=${encodeURIComponent(route)}`;
+	location.href = link;
+}
+
+form.addEventListener("submit", (event) => {
 	event.preventDefault();
-	try {
-		await registerSW();
-	} catch (err) {
-		error.textContent = "Failed to register service worker.";
-		errorCode.textContent = err.toString();
-		throw err;
-	}
-	const url = search(address.value, searchEngine.value);
-	let wispUrl =
-		(location.protocol === "https:" ? "wss" : "ws") +
-		"://" +
-		location.host +
-		"/wisp/";
-	if ((await connection.getTransport()) !== "/libcurl/index.mjs") {
-		await connection.setTransport("/libcurl/index.mjs", [
-			{ websocket: wispUrl },
-		]);
-	}
-	const frame = scramjet.createFrame();
-	frame.frame.id = "sj-frame";
-	document.body.appendChild(frame.frame);
-	frame.go(url);
+	const input = address.value.trim();
+	if (!input) return;
+	const url = search(input, searchEngine.value);
+	goToSite(url);
 });
 
 // Auto-navigate if ?route= param is present
