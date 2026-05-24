@@ -1,0 +1,315 @@
+/* ─── BROWSER CHROME — bottom-slide toolbar ─── */
+
+/* Pull tab at bottom center */
+#bc-pull-tab {
+	position: fixed;
+	bottom: 0;
+	left: 50%;
+	transform: translateX(-50%);
+	z-index: 9997;
+	display: none; /* shown only when iframe is active */
+	cursor: pointer;
+	background: rgba(10, 5, 30, 0.92);
+	border: 1px solid rgba(124, 58, 237, 0.3);
+	border-bottom: none;
+	border-radius: 10px 10px 0 0;
+	padding: 5px 18px 4px;
+	display: flex;
+	align-items: center;
+	gap: 7px;
+	backdrop-filter: blur(14px);
+	box-shadow: 0 -4px 20px rgba(0,0,0,0.5);
+	transition: background 0.2s, border-color 0.2s;
+	user-select: none;
+}
+
+#bc-pull-tab:hover {
+	background: rgba(20, 10, 55, 0.97);
+	border-color: rgba(124, 58, 237, 0.55);
+}
+
+#bc-pull-tab svg {
+	color: rgba(167,139,250,0.7);
+	animation: pulseChev 2s ease-in-out infinite;
+}
+
+#bc-pull-tab span {
+	font-family: "DM Sans", sans-serif;
+	font-size: 11px;
+	color: rgba(200,185,255,0.5);
+	letter-spacing: 0.04em;
+}
+
+@keyframes pulseChev {
+	0%,100% { opacity: 0.5; transform: translateY(0); }
+	50%      { opacity: 1;   transform: translateY(-2px); }
+}
+
+/* The sliding toolbar */
+#bc-toolbar {
+	position: fixed;
+	bottom: -64px; /* hidden off-screen */
+	left: 0;
+	right: 0;
+	height: 56px;
+	z-index: 9998;
+	background: rgba(6, 2, 20, 0.97);
+	border-top: 1px solid rgba(124, 58, 237, 0.25);
+	backdrop-filter: blur(20px);
+	box-shadow: 0 -12px 40px rgba(0,0,0,0.6), 0 -1px 0 rgba(124,58,237,0.12);
+	display: flex;
+	align-items: center;
+	padding: 0 12px;
+	gap: 4px;
+	transition: bottom 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+#bc-toolbar.open {
+	bottom: 0;
+}
+
+/* Nav buttons */
+.bc-btn {
+	width: 34px;
+	height: 34px;
+	border-radius: 8px;
+	border: none;
+	background: transparent;
+	color: rgba(200,185,255,0.45);
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0;
+	transition: background 0.15s, color 0.15s, transform 0.1s;
+	flex-shrink: 0;
+}
+
+.bc-btn:hover:not(:disabled) {
+	background: rgba(124,58,237,0.14);
+	color: #c4b5fd;
+}
+
+.bc-btn:active:not(:disabled) {
+	transform: scale(0.9);
+}
+
+.bc-btn:disabled {
+	opacity: 0.22;
+	cursor: default;
+}
+
+/* Address bar */
+#bc-addr-wrap {
+	flex: 1;
+	position: relative;
+	display: flex;
+	align-items: center;
+	margin: 0 4px;
+}
+
+#bc-addr-glow {
+	position: absolute;
+	inset: -1px;
+	border-radius: 9px;
+	background: linear-gradient(135deg, rgba(124,58,237,0.55), rgba(59,130,246,0.35));
+	opacity: 0;
+	transition: opacity 0.25s;
+	pointer-events: none;
+	z-index: 0;
+}
+
+#bc-addr-wrap:focus-within #bc-addr-glow { opacity: 1; }
+
+#bc-addr-lock {
+	position: absolute;
+	left: 10px;
+	z-index: 2;
+	color: rgba(167,139,250,0.45);
+	pointer-events: none;
+	display: flex;
+}
+
+#bc-address {
+	width: 100%;
+	height: 34px;
+	background: rgba(4, 2, 15, 0.9);
+	border: 1px solid rgba(255,255,255,0.07);
+	border-radius: 8px;
+	padding: 0 34px 0 32px;
+	color: rgba(220,210,255,0.9);
+	font-family: "DM Sans", sans-serif;
+	font-size: 13px;
+	outline: none;
+	transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+	position: relative;
+	z-index: 1;
+}
+
+#bc-address:focus {
+	border-color: rgba(124,58,237,0.5);
+	background: rgba(8,4,28,0.98);
+	box-shadow: 0 0 0 3px rgba(124,58,237,0.1);
+}
+
+#bc-address::placeholder { color: rgba(200,185,255,0.2); }
+
+/* Inline reload inside address bar */
+#bc-reload-inner {
+	position: absolute;
+	right: 6px;
+	z-index: 2;
+	width: 22px;
+	height: 22px;
+	border-radius: 5px;
+	border: none;
+	background: transparent;
+	color: rgba(200,185,255,0.35);
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0;
+	transition: background 0.15s, color 0.15s;
+}
+
+#bc-reload-inner:hover { background: rgba(124,58,237,0.15); color: #c4b5fd; }
+#bc-reload-inner.spinning svg { animation: bcSpin 0.7s linear infinite; }
+
+@keyframes bcSpin { to { transform: rotate(360deg); } }
+
+/* Right-side icon buttons */
+.bc-icon-btn {
+	width: 30px;
+	height: 30px;
+	border-radius: 7px;
+	border: none;
+	background: transparent;
+	color: rgba(200,185,255,0.38);
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0;
+	transition: background 0.15s, color 0.15s;
+	flex-shrink: 0;
+}
+
+.bc-icon-btn:hover { background: rgba(124,58,237,0.12); color: #c4b5fd; }
+.bc-icon-btn.active { color: #a78bfa; }
+
+/* Divider */
+.bc-divider {
+	width: 1px;
+	height: 20px;
+	background: rgba(255,255,255,0.07);
+	flex-shrink: 0;
+	margin: 0 2px;
+}
+
+/* Close pull-tab (×) inside toolbar */
+#bc-close-tab {
+	width: 28px;
+	height: 28px;
+	border-radius: 7px;
+	border: none;
+	background: transparent;
+	color: rgba(200,185,255,0.3);
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0;
+	transition: background 0.15s, color 0.15s;
+	flex-shrink: 0;
+}
+
+#bc-close-tab:hover { background: rgba(239,68,68,0.15); color: #f87171; }
+
+/* Progress bar at top of toolbar */
+#bc-progress {
+	position: absolute;
+	top: 0; left: 0; right: 0;
+	height: 2px;
+	background: linear-gradient(90deg, #7c3aed, #a855f7, #3b82f6);
+	transform-origin: left;
+	transform: scaleX(0);
+	opacity: 0;
+	transition: transform 0.3s ease, opacity 0.2s;
+}
+
+#bc-progress.loading {
+	opacity: 1;
+	animation: bcProgress 1.6s ease-in-out infinite;
+}
+
+#bc-progress.done {
+	transform: scaleX(1);
+	opacity: 0;
+	transition: transform 0.15s ease, opacity 0.3s ease 0.1s;
+}
+
+@keyframes bcProgress {
+	0%   { transform: scaleX(0); }
+	60%  { transform: scaleX(0.82); }
+	100% { transform: scaleX(0.82); }
+}
+
+/* Bookmarks bar (hidden by default, toggled) */
+#bc-bookmarks-bar {
+	position: fixed;
+	bottom: 56px;
+	left: 0; right: 0;
+	height: 34px;
+	background: rgba(6,2,20,0.95);
+	border-top: 1px solid rgba(124,58,237,0.15);
+	display: none;
+	align-items: center;
+	padding: 0 16px;
+	gap: 6px;
+	z-index: 9997;
+	backdrop-filter: blur(12px);
+	overflow-x: auto;
+	scrollbar-width: none;
+}
+
+#bc-bookmarks-bar::-webkit-scrollbar { display: none; }
+#bc-bookmarks-bar.visible { display: flex; }
+
+.bc-bookmark {
+	display: flex;
+	align-items: center;
+	gap: 5px;
+	padding: 3px 10px;
+	border-radius: 5px;
+	border: 1px solid rgba(255,255,255,0.06);
+	background: rgba(255,255,255,0.03);
+	color: rgba(200,185,255,0.6);
+	font-family: "DM Sans", sans-serif;
+	font-size: 11px;
+	cursor: pointer;
+	white-space: nowrap;
+	transition: all 0.15s;
+	flex-shrink: 0;
+}
+
+.bc-bookmark:hover {
+	background: rgba(124,58,237,0.12);
+	border-color: rgba(124,58,237,0.3);
+	color: #c4b5fd;
+}
+
+/* Iframe area adjustments when toolbar is open */
+#sj-frame {
+	transition: bottom 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+body.bc-open #sj-frame {
+	bottom: 56px !important;
+	height: calc(100vh - 56px) !important;
+}
+
+/* Pull tab hidden when no frame is active */
+body:not(.bc-active) #bc-pull-tab {
+	display: none !important;
+}
