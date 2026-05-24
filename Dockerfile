@@ -1,7 +1,7 @@
 FROM node:18-alpine
 
 ENV NODE_ENV=production
-ARG NPM_BUILD="npm install --omit=dev"
+
 EXPOSE 8080/tcp
 
 LABEL maintainer="Mercury Workshop"
@@ -10,11 +10,20 @@ LABEL description="Example application of Scramjet"
 
 WORKDIR /app
 
-COPY ["package.json", "package-lock.json", "./"]
+# Install system dependencies
 RUN apk add --upgrade --no-cache python3 make g++
-RUN $NPM_BUILD
 
+# Enable pnpm via corepack
+RUN corepack enable
+
+# Copy dependency manifests
+COPY package.json pnpm-lock.yaml ./
+
+# Install production dependencies
+RUN pnpm install --frozen-lockfile --prod
+
+# Copy app source
 COPY . .
 
-ENTRYPOINT [ "node" ]
+ENTRYPOINT ["node"]
 CMD ["src/index.js"]
