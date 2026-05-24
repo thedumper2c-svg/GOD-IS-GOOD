@@ -26,7 +26,7 @@
 		</div>
 
 		<form id="sj-form" class="flex-center">
-			<input id="sj-search-engine" value="https://www.google.com/search?q=%s" type="hidden" />
+			<input id="sj-search-engine" value="https://duckduckgo.com/?q=%s" type="hidden" />
 			<input id="sj-address" type="text" placeholder="Search the web freely" />
 		</form>
 		<div class="desc left-margin">
@@ -44,15 +44,5 @@
 				<span>Scramjet &copy; MW 2025</span>
 			</div>
 		</footer>
-
-		<script>
-			function goToSite(input) {
-				if (!input) return;
-				const encoded = btoa(input);
-				const route = `/search?query=${encodeURIComponent(encoded)}&v="1"`;
-				const link = `${location.origin}/?route=${encodeURIComponent(route)}`;
-				location.href = link;
-			}
-		</script>
 	</body>
 </html>
