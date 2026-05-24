@@ -13,12 +13,17 @@
 		<script src="index.js" defer></script>
 	</head>
 	<body>
+		<!-- Floating ambient orbs -->
+		<div class="orb orb-1"></div>
+		<div class="orb orb-2"></div>
+		<div class="orb orb-3"></div>
+
 		<div class="main-wrapper">
-			<h1 class="site-title">Areoy Proxy</h1>
+			<h1 class="site-title" data-text="Areoy Proxy">Areoy Proxy</h1>
 
 			<form id="sj-form" class="search-wrapper">
 				<input id="sj-search-engine" value="https://duckduckgo.com/?q=%s" type="hidden" />
-				<input id="sj-address" type="text" placeholder="search..." />
+				<input id="sj-address" type="text" placeholder="search..." autocomplete="off" />
 			</form>
 
 			<div class="error-wrapper">
@@ -33,7 +38,6 @@
 				</div>
 				<div class="apps-grid" id="apps-grid"></div>
 
-				<!-- Add form -->
 				<div class="add-form" id="add-form" style="display:none;">
 					<div class="add-form-row">
 						<label>Name</label>
