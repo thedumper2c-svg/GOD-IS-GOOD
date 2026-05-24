@@ -68,8 +68,10 @@ form.addEventListener("submit", (event) => {
 	event.preventDefault();
 	const input = address.value.trim();
 	if (!input) return;
-	const url = search(input, searchEngine.value);
-	goToSite(url);
+	// Encode the raw input directly as base64, so "hey" → search?query=aGV5
+	// search() resolves it to a full URL inside the proxy worker
+	const b64 = btoa(unescape(encodeURIComponent(input)));
+	location.href = `${location.origin}/?route=${encodeURIComponent(`/search?query=${encodeURIComponent(b64)}&v="1"`)}`;
 });
 
 // Auto-navigate if ?route= param is present
@@ -83,10 +85,10 @@ window.addEventListener("load", async () => {
 	const query = routeParams.get("query");
 	if (!query) return;
 
-	// Decode base64 → real URL
-	let targetUrl;
+	// Decode base64 → raw input (could be "hey", "youtube.com", or "https://youtube.com")
+	let rawInput;
 	try {
-		targetUrl = atob(decodeURIComponent(query));
+		rawInput = decodeURIComponent(escape(atob(decodeURIComponent(query))));
 	} catch {
 		return;
 	}
@@ -99,7 +101,11 @@ window.addEventListener("load", async () => {
 		return;
 	}
 
-	const url = search(targetUrl, searchEngine.value);
+	// search() turns raw input into a full URL:
+	// "hey" → "https://duckduckgo.com/?q=hey"
+	// "youtube.com" → "http://youtube.com"
+	// "https://youtube.com" → "https://youtube.com"
+	const url = search(rawInput, searchEngine.value);
 
 	let wispUrl =
 		(location.protocol === "https:" ? "wss" : "ws") +
@@ -122,8 +128,8 @@ window.addEventListener("load", async () => {
 	const frame = scramjet.createFrame();
 	frame.frame.id = "sj-frame";
 
-	// Store the REAL url on the frame element so browser-chrome.js
-	// can display it in the address bar instead of the scramjet proxy URL.
+	// Store the real URL for the address bar display.
+	// If it's a search query like "hey", show the search engine URL it resolved to.
 	frame.frame.dataset.realUrl = url;
 
 	document.body.appendChild(frame.frame);
