@@ -460,3 +460,31 @@ body {
 ::-webkit-scrollbar-track { background: rgba(255,255,255,0.04); border-radius: 3px; }
 ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.25); }
+
+/* ── Roblox icon ── */
+.roblox-icon {
+	width: 22px; height: 22px;
+	display: flex; align-items: center; justify-content: center;
+}
+.roblox-diamond {
+	width: 17px; height: 17px;
+	background: #fff; border-radius: 3px;
+	display: flex; align-items: center; justify-content: center;
+	transform: rotate(45deg);
+}
+.roblox-hole {
+	width: 7px; height: 7px;
+	background: #141414; border-radius: 2px;
+}
+
+/* ── App icon sizing fix (bare SVGs, no rect bg) ── */
+.app-icon {
+	width: 28px; height: 28px;
+	display: flex; align-items: center; justify-content: center;
+	overflow: visible;
+}
+
+.app-icon svg {
+	width: 22px; height: 22px;
+	overflow: visible;
+}
