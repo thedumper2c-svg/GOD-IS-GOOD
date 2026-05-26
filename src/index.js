@@ -1,9 +1,9 @@
 import { createServer } from "node:http";
 import { fileURLToPath } from "url";
+import path from "path";
 import { hostname } from "node:os";
 
 import { server as wisp, logging } from "@mercuryworkshop/wisp-js/server";
-
 import Fastify from "fastify";
 import fastifyStatic from "@fastify/static";
 
@@ -11,10 +11,16 @@ import { scramjetPath } from "@mercuryworkshop/scramjet/path";
 import { libcurlPath } from "@mercuryworkshop/libcurl-transport";
 import { baremuxPath } from "@mercuryworkshop/bare-mux/node";
 
-// Paths
-const publicPath = fileURLToPath(new URL("../public/", import.meta.url));
+/* -------------------- PATH FIX -------------------- */
 
-// Wisp Configuration
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// IMPORTANT: correct Docker-safe path
+const publicPath = path.join(__dirname, "../public");
+
+/* -------------------- WISP CONFIG -------------------- */
+
 logging.set_level(logging.NONE);
 
 Object.assign(wisp.options, {
@@ -23,19 +29,17 @@ Object.assign(wisp.options, {
 	dns_servers: ["1.1.1.3", "1.0.0.3"],
 });
 
-// Fastify Instance
+/* -------------------- FASTIFY SERVER -------------------- */
+
 const fastify = Fastify({
 	serverFactory: (handler) => {
 		return createServer()
 			.on("request", (req, res) => {
-				// Required headers for Scramjet isolation
 				res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
 				res.setHeader("Cross-Origin-Embedder-Policy", "require-corp");
-
 				handler(req, res);
 			})
 			.on("upgrade", (req, socket, head) => {
-				// WebSocket routing for Wisp
 				if (req.url.endsWith("/wisp/")) {
 					wisp.routeRequest(req, socket, head);
 				} else {
@@ -45,52 +49,59 @@ const fastify = Fastify({
 	},
 });
 
-// Serve frontend files
+/* -------------------- STATIC FILES -------------------- */
+
+// MAIN FRONTEND (this fixes your / problem)
 fastify.register(fastifyStatic, {
 	root: publicPath,
-	prefix: "/",
 	decorateReply: true,
+	index: "index.html",
 });
 
-// Serve Scramjet client files
+/* -------------------- SCRAMJET ASSETS -------------------- */
+
 fastify.register(fastifyStatic, {
 	root: scramjetPath,
 	prefix: "/scram/",
 	decorateReply: false,
 });
 
-// Serve Libcurl transport
 fastify.register(fastifyStatic, {
 	root: libcurlPath,
 	prefix: "/libcurl/",
 	decorateReply: false,
 });
 
-// Serve BareMux
 fastify.register(fastifyStatic, {
 	root: baremuxPath,
 	prefix: "/baremux/",
 	decorateReply: false,
 });
 
-// Root route
-fastify.get("/", async (request, reply) => {
+/* -------------------- ROOT ROUTE FIX -------------------- */
+
+// ensures / ALWAYS works
+fastify.get("/", async (req, reply) => {
 	return reply.sendFile("index.html");
 });
 
-// Optional health check
+/* -------------------- HEALTH CHECK -------------------- */
+
 fastify.get("/health", async () => {
-	return {
-		status: "ok",
-	};
+	return { status: "ok" };
 });
 
-// 404 handler
+/* -------------------- 404 HANDLER -------------------- */
+
 fastify.setNotFoundHandler((request, reply) => {
-	return reply.code(404).type("text/html").sendFile("404.html");
+	return reply
+		.code(404)
+		.type("text/html")
+		.sendFile("404.html");
 });
 
-// Startup logging
+/* -------------------- LOGGING -------------------- */
+
 fastify.server.on("listening", () => {
 	const address = fastify.server.address();
 
@@ -106,26 +117,21 @@ fastify.server.on("listening", () => {
 	);
 });
 
-// Graceful shutdown
+/* -------------------- SHUTDOWN -------------------- */
+
 process.on("SIGINT", shutdown);
 process.on("SIGTERM", shutdown);
 
 function shutdown() {
 	console.log("Shutdown signal received");
-
-	fastify.close(() => {
-		process.exit(0);
-	});
+	fastify.close(() => process.exit(0));
 }
 
-// Port handling
+/* -------------------- START SERVER -------------------- */
+
 let port = parseInt(process.env.PORT || "");
+if (isNaN(port)) port = 8080;
 
-if (isNaN(port)) {
-	port = 8080;
-}
-
-// Start server
 try {
 	await fastify.listen({
 		port,
