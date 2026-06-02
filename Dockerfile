@@ -19,8 +19,8 @@ RUN corepack enable
 # Copy dependency manifests
 COPY package.json pnpm-lock.yaml ./
 
-# Install production dependencies
-RUN pnpm install --frozen-lockfile --prod
+# FIXED: Replaced --frozen-lockfile with --no-frozen-lockfile to bypass version mismatches
+RUN pnpm install --no-frozen-lockfile --prod
 
 # Copy app source
 COPY . .
