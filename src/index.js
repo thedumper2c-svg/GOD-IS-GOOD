@@ -12,15 +12,11 @@ import { libcurlPath } from "@mercuryworkshop/libcurl-transport";
 import { baremuxPath } from "@mercuryworkshop/bare-mux/node";
 
 /* -------------------- PATH FIX -------------------- */
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
-// IMPORTANT: correct Docker-safe path
 const publicPath = path.join(__dirname, "../public");
 
 /* -------------------- WISP CONFIG -------------------- */
-
 logging.set_level(logging.NONE);
 
 Object.assign(wisp.options, {
@@ -30,7 +26,6 @@ Object.assign(wisp.options, {
 });
 
 /* -------------------- FASTIFY SERVER -------------------- */
-
 const fastify = Fastify({
 	serverFactory: (handler) => {
 		return createServer()
@@ -49,16 +44,8 @@ const fastify = Fastify({
 	},
 });
 
-/* -------------------- STATIC FILES -------------------- */
-
-// MAIN FRONTEND (this fixes your / problem)
-fastify.register(fastifyStatic, {
-	root: publicPath,
-	decorateReply: true,
-	index: "index.html",
-});
-
-/* -------------------- SCRAMJET ASSETS -------------------- */
+/* -------------------- 1. SCRAMJET ASSETS FIRST -------------------- */
+// These MUST be on top so Fastify catches them before checking the public folder!
 
 fastify.register(fastifyStatic, {
 	root: scramjetPath,
@@ -78,21 +65,25 @@ fastify.register(fastifyStatic, {
 	decorateReply: false,
 });
 
-/* -------------------- ROOT ROUTE FIX -------------------- */
+/* -------------------- 2. MAIN UI FRONTEND FALLBACK -------------------- */
 
-// ensures / ALWAYS works
+fastify.register(fastifyStatic, {
+	root: publicPath,
+	decorateReply: true,
+	index: "index.html",
+});
+
+/* -------------------- ROOT ROUTE FIX -------------------- */
 fastify.get("/", async (req, reply) => {
 	return reply.sendFile("index.html");
 });
 
 /* -------------------- HEALTH CHECK -------------------- */
-
 fastify.get("/health", async () => {
 	return { status: "ok" };
 });
 
 /* -------------------- 404 HANDLER -------------------- */
-
 fastify.setNotFoundHandler((request, reply) => {
 	return reply
 		.code(404)
@@ -101,24 +92,14 @@ fastify.setNotFoundHandler((request, reply) => {
 });
 
 /* -------------------- LOGGING -------------------- */
-
 fastify.server.on("listening", () => {
 	const address = fastify.server.address();
-
 	console.log("Listening on:");
 	console.log(`\thttp://localhost:${address.port}`);
 	console.log(`\thttp://${hostname()}:${address.port}`);
-	console.log(
-		`\thttp://${
-			address.family === "IPv6"
-				? `[${address.address}]`
-				: address.address
-		}:${address.port}`
-	);
 });
 
 /* -------------------- SHUTDOWN -------------------- */
-
 process.on("SIGINT", shutdown);
 process.on("SIGTERM", shutdown);
 
@@ -128,7 +109,6 @@ function shutdown() {
 }
 
 /* -------------------- START SERVER -------------------- */
-
 let port = parseInt(process.env.PORT || "");
 if (isNaN(port)) port = 8080;
 
