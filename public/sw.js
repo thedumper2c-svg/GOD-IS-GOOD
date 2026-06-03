@@ -1,4 +1,4 @@
-importScripts("/assets/scramjet.all.js");
+importScripts("/asset/kspy-e-UJo8ly1.js");
 
 const { ScramjetServiceWorker } = $scramjetLoadWorker();
 const scramjet = new ScramjetServiceWorker();

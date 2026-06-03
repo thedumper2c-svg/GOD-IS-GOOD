@@ -52,7 +52,7 @@ fastify.register(fastifyStatic, {
 
 fastify.register(fastifyStatic, {
 	root: baremuxPath,
-	prefix: "/asset/",
+	prefix: "/bare/",
 	decorateReply: false,
 });
 
