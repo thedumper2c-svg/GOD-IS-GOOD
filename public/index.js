@@ -24,14 +24,14 @@ const errorCode = document.getElementById("sj-error-code");
 const { ScramjetController } = $scramjetLoadController();
 const scramjet = new ScramjetController({
 	files: {
-		wasm: "/scram/scramjet.wasm.wasm",
-		all: "/scram/scramjet.all.js",
-		sync: "/scram/scramjet.sync.js",
+		wasm: "/assets/scramjet.wasm.wasm",
+		all: "/assets/scramjet.all.js",
+		sync: "/assets/scramjet.sync.js",
 	},
 });
 scramjet.init();
 
-const connection = new BareMux.BareMuxConnection("/baremux/worker.js");
+const connection = new BareMux.BareMuxConnection("/asset/worker.js");
 
 /**
  * Encode a real URL into the proxy route format.
