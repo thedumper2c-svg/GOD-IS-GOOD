@@ -3,6 +3,7 @@ import { fileURLToPath } from "url";
 import { hostname } from "node:os";
 import { server as wisp, logging } from "@mercuryworkshop/wisp-js/server";
 import Fastify from "fastify";
+import compression from "@fastify/compress";
 import fastifyStatic from "@fastify/static";
 
 import { scramjetPath } from "@mercuryworkshop/scramjet/path";
@@ -19,6 +20,9 @@ Object.assign(wisp.options, {
 });
 
 const fastify = Fastify({
+	logger: false,
+	keepAliveTimeout: 65,
+	headersTimeout: 70,
 	serverFactory: (handler) => {
 		return createServer()
 			.on("request", (req, res) => {
@@ -33,27 +37,52 @@ const fastify = Fastify({
 	},
 });
 
+await fastify.register(compression, {
+	global: true,
+	threshold: 1024,
+});
+
 fastify.register(fastifyStatic, {
 	root: publicPath,
 	decorateReply: true,
+	etag: true,
+	lastModified: true,
+	maxAge: 1000 * 60 * 60 * 24 * 30,
+	cacheControl: true,
+	immutable: true,
 });
 
 fastify.register(fastifyStatic, {
 	root: scramjetPath,
 	prefix: "/assets/",
 	decorateReply: false,
+	etag: true,
+	lastModified: true,
+	maxAge: 1000 * 60 * 60 * 24 * 30,
+	cacheControl: true,
+	immutable: true,
 });
 
 fastify.register(fastifyStatic, {
 	root: libcurlPath,
 	prefix: "/libcurl/",
 	decorateReply: false,
+	etag: true,
+	lastModified: true,
+	maxAge: 1000 * 60 * 60 * 24 * 30,
+	cacheControl: true,
+	immutable: true,
 });
 
 fastify.register(fastifyStatic, {
 	root: baremuxPath,
 	prefix: "/bare/",
 	decorateReply: false,
+	etag: true,
+	lastModified: true,
+	maxAge: 1000 * 60 * 60 * 24 * 30,
+	cacheControl: true,
+	immutable: true,
 });
 
 fastify.setNotFoundHandler((req, reply) => {
