@@ -21,34 +21,17 @@ const error = document.getElementById("sj-error");
  */
 const errorCode = document.getElementById("sj-error-code");
 
-let suppressBeforeUnload = false;
-
-function ignoreInternalUnload() {
-	suppressBeforeUnload = true;
-	setTimeout(() => {
-		suppressBeforeUnload = false;
-	}, 0);
-}
-
-window.addEventListener("beforeunload", (event) => {
-	if (suppressBeforeUnload) return;
-
-	// Prompt the user before leaving the site or navigating away.
-	event.preventDefault();
-	event.returnValue = "";
-});
-
 const { ScramjetController } = $scramjetLoadController();
 const scramjet = new ScramjetController({
 	files: {
-		wasm: "/asset/kspy-e-UJo8ly1.wasm",
-		all: "/asset/kspy-e-UJo8ly1.js",
-		sync: "/asset/kspy-e-UJo8ly1.sync.js",
+		wasm: "/scram/scramjet.wasm.wasm",
+		all: "/scram/scramjet.all.js",
+		sync: "/scram/scramjet.sync.js",
 	},
 });
 scramjet.init();
 
-const connection = new BareMux.BareMuxConnection("/bare/worker.js");
+const connection = new BareMux.BareMuxConnection("/baremux/worker.js");
 
 /**
  * Encode a real URL into the proxy route format.
@@ -78,7 +61,6 @@ function buildProxyHref(realUrl) {
  */
 function goToSite(realUrl) {
 	if (!realUrl) return;
-	ignoreInternalUnload();
 	location.href = buildProxyHref(realUrl);
 }
 
@@ -89,16 +71,7 @@ form.addEventListener("submit", (event) => {
 	// Encode the raw input directly as base64, so "hey" → search?query=aGV5
 	// search() resolves it to a full URL inside the proxy worker
 	const b64 = btoa(unescape(encodeURIComponent(input)));
-	ignoreInternalUnload();
 	location.href = `${location.origin}/?route=${encodeURIComponent(`/search?query=${encodeURIComponent(b64)}&v="1"`)}`;
-});
-
-document.addEventListener("click", (event) => {
-	const anchor = event.target.closest("a[href]");
-	if (!anchor) return;
-	if (anchor.href.includes("?route=") && anchor.origin === location.origin) {
-		ignoreInternalUnload();
-	}
 });
 
 // Auto-navigate if ?route= param is present

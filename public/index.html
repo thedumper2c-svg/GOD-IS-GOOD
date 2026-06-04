@@ -3,10 +3,10 @@
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no" />
-		<title>Areoy</title>
+		<title>Areoy Proxy</title>
 		<link rel="shortcut icon" content="favicon.webp" />
-		<script src="/asset/kspy-e-UJo8ly1.js"></script>
-		<script src="/bare/index.js"></script>
+		<script src="/scram/scramjet.all.js"></script>
+		<script src="/baremux/index.js"></script>
 		<link rel="stylesheet" href="index.css" />
 		<link rel="stylesheet" href="browser-chrome.css" />
 		<script src="register-sw.js" defer></script>
@@ -25,13 +25,34 @@
 		</div>
 		<div style="display:none" aria-hidden="true">
 			<h1>LinguaPath — Learn a New Language One Conversation at a Time</h1>
+			<p>LinguaPath is a free language learning platform combining short audio-first lessons, native speaker dialogues, and writing practice for learners from absolute beginner through advanced fluency.</p>
+			<section>
+				<h2>Languages Offered</h2>
+				<p>Active courses include Spanish (Latin American and Castilian), French, German, Italian, Brazilian Portuguese, Mandarin Chinese, Japanese, Korean, Russian, Arabic (Modern Standard), Hindi, Dutch, Swedish, and English as a Second Language. Courses for Vietnamese, Turkish, and Greek are in beta.</p>
+			</section>
+			<section>
+				<h2>Proficiency Levels</h2>
+				<p>Lessons are mapped to the Common European Framework of Reference, covering A1 and A2 beginner, B1 and B2 intermediate, and C1 advanced bands. A short placement test routes returning learners to the right starting point.</p>
+			</section>
+			<section>
+				<h2>Test Prep</h2>
+				<p>Targeted preparation tracks support the DELE and SIELE for Spanish, DELF and DALF for French, Goethe-Zertifikat for German, CILS for Italian, HSK for Mandarin, JLPT for Japanese, TOPIK for Korean, TOEFL and IELTS for English, and AP language exams.</p>
+			</section>
+			<section>
+				<h2>How Lessons Work</h2>
+				<p>Each ten-minute lesson opens with a contextual dialogue, introduces ten new words, drills pronunciation through speech recognition, and ends with a short written or spoken exercise. Streak tracking and spaced repetition keep vocabulary in long-term memory.</p>
+			</section>
+			<section>
+				<h2>Conversation Practice</h2>
+				<p>Live small-group conversation rooms run daily across time zones, organized by language and level. Learners can also book one-on-one tutor sessions and exchange voice messages with study partners around the world.</p>
+			</section>
 		</div>
-
-		<!-- Constellation background -->
-		<canvas id="constellation-canvas"></canvas>
-
+		<!-- Floating ambient orbs -->
+		<div class="orb orb-1"></div>
+		<div class="orb orb-2"></div>
+		<div class="orb orb-3"></div>
 		<div class="main-wrapper">
-			<h1 class="site-title" data-text="Areoy Proxy">Kamsi Obierika Proxy</h1>
+			<h1 class="site-title" data-text="Areoy Proxy">Areoy Proxy</h1>
 			<form id="sj-form" class="search-wrapper">
 				<input id="sj-search-engine" value="https://duckduckgo.com/?q=%s" type="hidden" />
 				<input id="sj-address" type="text" placeholder="search..." autocomplete="off" />
@@ -62,108 +83,6 @@
 				</div>
 			</div>
 		</div>
-
-		<!-- Constellation script -->
-		<script>
-		(function () {
-			var canvas = document.getElementById("constellation-canvas");
-			var ctx = canvas.getContext("2d");
-			var stars = [];
-
-			function resize() {
-				canvas.width = window.innerWidth;
-				canvas.height = window.innerHeight;
-			}
-
-			function createStars() {
-				var W = canvas.width, H = canvas.height;
-				var count = Math.floor((W * H) / 6000);
-				stars = [];
-				for (var i = 0; i < count; i++) {
-					var glowing = Math.random() < 0.1;
-					var glowColor = Math.random() > 0.4 ? "#75ac2a" : "#4a9c7a";
-					stars.push({
-						x: Math.random() * W, y: Math.random() * H,
-						vx: (Math.random() - 0.5) * 0.12,
-						vy: (Math.random() - 0.5) * 0.12,
-						radius: glowing ? Math.random() * 2.5 + 2 : Math.random() * 1.5 + 0.3,
-						color: glowing ? glowColor : "#ffffff",
-						brightness: Math.random() * 0.5 + 0.3,
-						glowing: glowing,
-						glowRadius: glowing ? Math.random() * 25 + 20 : 0
-					});
-				}
-			}
-
-			function drawStar(s) {
-				if (s.glowing) {
-					var g = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, s.glowRadius);
-					g.addColorStop(0, s.color + "70");
-					g.addColorStop(0.3, s.color + "40");
-					g.addColorStop(0.6, s.color + "15");
-					g.addColorStop(1, "transparent");
-					ctx.beginPath(); ctx.arc(s.x, s.y, s.glowRadius, 0, Math.PI * 2);
-					ctx.fillStyle = g; ctx.fill();
-					var cg = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, s.radius * 2);
-					cg.addColorStop(0, "#ffffff");
-					cg.addColorStop(0.5, s.color);
-					cg.addColorStop(1, s.color + "80");
-					ctx.beginPath(); ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
-					ctx.fillStyle = cg; ctx.fill();
-				} else {
-					var alpha = Math.floor(s.brightness * 255).toString(16).padStart(2, "0");
-					ctx.beginPath(); ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
-					ctx.fillStyle = s.color + alpha; ctx.fill();
-				}
-			}
-
-			function drawConnections() {
-				var dist = 100;
-				for (var i = 0; i < stars.length; i++) {
-					for (var j = i + 1; j < stars.length; j++) {
-						var dx = stars[i].x - stars[j].x, dy = stars[i].y - stars[j].y;
-						var d = Math.sqrt(dx * dx + dy * dy);
-						if (d < dist) {
-							var op = (1 - d / dist) * 0.12;
-							var isGlow = stars[i].glowing || stars[j].glowing;
-							ctx.beginPath();
-							ctx.moveTo(stars[i].x, stars[i].y);
-							ctx.lineTo(stars[j].x, stars[j].y);
-							ctx.strokeStyle = isGlow
-								? "rgba(117,172,42," + (op * 1.5) + ")"
-								: "rgba(150,150,150," + op + ")";
-							ctx.lineWidth = isGlow ? 0.8 : 0.4;
-							ctx.stroke();
-						}
-					}
-				}
-			}
-
-			function animate() {
-				var W = canvas.width, H = canvas.height;
-				ctx.clearRect(0, 0, W, H);
-				drawConnections();
-				for (var i = 0; i < stars.length; i++) {
-					var s = stars[i];
-					s.x += s.vx; s.y += s.vy;
-					if (s.x < -50) s.x = W + 50;
-					if (s.x > W + 50) s.x = -50;
-					if (s.y < -50) s.y = H + 50;
-					if (s.y > H + 50) s.y = -50;
-					if (!s.glowing) {
-						s.brightness += (Math.random() - 0.5) * 0.015;
-						s.brightness = Math.max(0.15, Math.min(0.7, s.brightness));
-					}
-					drawStar(s);
-				}
-				requestAnimationFrame(animate);
-			}
-
-			resize(); createStars(); animate();
-			window.addEventListener("resize", function () { resize(); createStars(); });
-		})();
-		</script>
-
 		<script src="apps.js"></script>
 	</body>
 </html>
