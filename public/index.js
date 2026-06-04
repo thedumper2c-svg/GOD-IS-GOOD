@@ -21,8 +21,19 @@ const error = document.getElementById("sj-error");
  */
 const errorCode = document.getElementById("sj-error-code");
 
+let suppressBeforeUnload = false;
+
+function ignoreInternalUnload() {
+	suppressBeforeUnload = true;
+	setTimeout(() => {
+		suppressBeforeUnload = false;
+	}, 0);
+}
+
 window.addEventListener("beforeunload", (event) => {
-	// Prompt the user before leaving the page.
+	if (suppressBeforeUnload) return;
+
+	// Prompt the user before leaving the site or navigating away.
 	event.preventDefault();
 	event.returnValue = "";
 });
@@ -67,6 +78,7 @@ function buildProxyHref(realUrl) {
  */
 function goToSite(realUrl) {
 	if (!realUrl) return;
+	ignoreInternalUnload();
 	location.href = buildProxyHref(realUrl);
 }
 
@@ -77,7 +89,16 @@ form.addEventListener("submit", (event) => {
 	// Encode the raw input directly as base64, so "hey" → search?query=aGV5
 	// search() resolves it to a full URL inside the proxy worker
 	const b64 = btoa(unescape(encodeURIComponent(input)));
+	ignoreInternalUnload();
 	location.href = `${location.origin}/?route=${encodeURIComponent(`/search?query=${encodeURIComponent(b64)}&v="1"`)}`;
+});
+
+document.addEventListener("click", (event) => {
+	const anchor = event.target.closest("a[href]");
+	if (!anchor) return;
+	if (anchor.href.includes("?route=") && anchor.origin === location.origin) {
+		ignoreInternalUnload();
+	}
 });
 
 // Auto-navigate if ?route= param is present
