@@ -1,5 +1,8 @@
 @import url("https://fonts.googleapis.com/css2?family=Euphoria+Script&family=Inter:wght@300;400;500&display=swap");
 
+/* ═══════════════════════════════════════
+   TOKENS
+═══════════════════════════════════════ */
 :root {
 	--bg:           #141414;
 	--card:         rgba(255,255,255,0.06);
@@ -12,14 +15,21 @@
 	--primary-dim:  rgba(117,172,42,0.18);
 	--primary-glow: rgba(117,172,42,0.35);
 	--radius:       0.5rem;
+	--transition:   0.2s ease;
 }
 
+/* ═══════════════════════════════════════
+   RESET
+═══════════════════════════════════════ */
 *, *::before, *::after {
 	box-sizing: border-box;
 	margin: 0;
 	padding: 0;
 }
 
+/* ═══════════════════════════════════════
+   BASE
+═══════════════════════════════════════ */
 html, body {
 	min-height: 100vh;
 	background: var(--bg);
@@ -35,7 +45,17 @@ body {
 	position: relative;
 }
 
-/* ── Constellation canvas ── */
+/* ═══════════════════════════════════════
+   SCROLLBAR
+═══════════════════════════════════════ */
+::-webkit-scrollbar       { width: 6px; }
+::-webkit-scrollbar-track { background: rgba(255,255,255,0.04); border-radius: 3px; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.25); }
+
+/* ═══════════════════════════════════════
+   CONSTELLATION CANVAS
+═══════════════════════════════════════ */
 #constellation-canvas {
 	position: fixed;
 	inset: 0;
@@ -45,7 +65,9 @@ body {
 	z-index: 0;
 }
 
-/* ── Main wrapper ── */
+/* ═══════════════════════════════════════
+   LAYOUT
+═══════════════════════════════════════ */
 .main-wrapper {
 	position: relative;
 	z-index: 1;
@@ -58,7 +80,150 @@ body {
 	gap: 0;
 }
 
-/* ── Title ── */
+/* ── Credits / Error pages ── */
+.logo-wrapper {
+	padding: 2rem 0 0.5rem;
+}
+
+.logo-wrapper h1 {
+	font-family: "Euphoria Script", cursive;
+	font-size: 2.4rem;
+	color: var(--text);
+	font-weight: 400;
+}
+
+.left-margin {
+	margin-left: 2rem;
+}
+
+.desc {
+	max-width: 720px;
+	line-height: 1.7;
+	color: var(--text-muted);
+	font-size: 0.95rem;
+	padding-bottom: 3rem;
+}
+
+footer {
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	padding: 0.75rem 2rem;
+	display: flex;
+	align-items: center;
+	gap: 1.2rem;
+	background: rgba(20,20,20,0.85);
+	backdrop-filter: blur(10px);
+	border-top: 1px solid var(--border);
+	font-size: 0.8rem;
+	color: var(--text-muted);
+	z-index: 100;
+}
+
+footer a {
+	color: var(--primary);
+	text-decoration: none;
+	transition: opacity var(--transition);
+}
+
+footer a:hover {
+	opacity: 0.75;
+}
+
+/* ── Credits card ── */
+.credit-card {
+	background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+	border: 1px solid #e94560;
+	border-radius: 12px;
+	padding: 2em 2.5em;
+	margin-bottom: 2.5em;
+	box-shadow: 0 4px 24px rgba(233,69,96,0.15);
+}
+
+.credit-card h2 {
+	color: #e94560;
+	margin: 0 0 0.5em 0;
+	font-size: 1.6em;
+	letter-spacing: 1px;
+}
+
+.credit-card p {
+	color: #aaaaaa;
+	font-size: 0.97em;
+	margin: 0 0 0.5em 0;
+	line-height: 1.7;
+}
+
+.credit-card p strong,
+.credit-card p .highlight {
+	color: #e94560;
+}
+
+/* ── License block ── */
+.credit {
+	margin-bottom: 2rem;
+}
+
+.credit span {
+	font-weight: 600;
+	font-size: 0.95rem;
+	color: var(--text);
+}
+
+.credit a {
+	color: var(--primary);
+	font-size: 0.85rem;
+	text-decoration: none;
+	margin-left: 0.5rem;
+	transition: opacity var(--transition);
+}
+
+.credit a:hover {
+	opacity: 0.75;
+}
+
+.credit pre {
+	margin-top: 0.75rem;
+	background: var(--card);
+	border: 1px solid var(--border);
+	border-radius: var(--radius);
+	padding: 1rem;
+	font-size: 0.78rem;
+	color: var(--text-muted);
+	overflow-x: auto;
+	white-space: pre-wrap;
+	line-height: 1.6;
+	max-height: 0;
+	overflow: hidden;
+	transition: max-height 0.4s ease, padding 0.3s ease;
+}
+
+.credit input[type="checkbox"]:checked ~ pre {
+	max-height: 9999px;
+	padding: 1rem;
+}
+
+.credit label {
+	display: inline-block;
+	margin-top: 0.3rem;
+	font-size: 0.8rem;
+	color: var(--primary);
+	cursor: pointer;
+	user-select: none;
+}
+
+.credit label::before {
+	content: "▸ Show license";
+}
+
+.credit input[type="checkbox"]:checked ~ label::before {
+	content: "▾ Hide license";
+}
+
+/* ═══════════════════════════════════════
+   TITLE
+═══════════════════════════════════════ */
 .site-title {
 	font-family: "Euphoria Script", cursive;
 	font-size: 64px;
@@ -81,12 +246,9 @@ body {
 	animation: glowPulse 3s ease-in-out infinite;
 }
 
-@keyframes glowPulse {
-	0%, 100% { opacity: 0.2; }
-	50%       { opacity: 0.45; }
-}
-
-/* ── Search ── */
+/* ═══════════════════════════════════════
+   SEARCH
+═══════════════════════════════════════ */
 .search-wrapper {
 	width: 100%;
 	margin-bottom: 8px;
@@ -120,14 +282,12 @@ body {
 	font-family: "Inter", sans-serif;
 	font-size: 14px;
 	outline: none;
-	transition: border 0.25s, background 0.25s, box-shadow 0.25s;
+	transition: border var(--transition), background var(--transition), box-shadow var(--transition);
 	height: 44px;
 	caret-color: var(--primary);
 }
 
-#sj-address::placeholder {
-	color: var(--text-muted);
-}
+#sj-address::placeholder { color: var(--text-muted); }
 
 #sj-address:focus {
 	border-color: rgba(117,172,42,0.5);
@@ -135,7 +295,9 @@ body {
 	box-shadow: 0 0 0 3px rgba(117,172,42,0.12);
 }
 
-/* ── Errors ── */
+/* ═══════════════════════════════════════
+   ERRORS
+═══════════════════════════════════════ */
 .error-wrapper {
 	width: 100%;
 	margin-bottom: 4px;
@@ -154,7 +316,9 @@ body {
 	font-family: monospace;
 }
 
-/* ── Quick apps ── */
+/* ═══════════════════════════════════════
+   QUICK APPS
+═══════════════════════════════════════ */
 .quick-apps {
 	width: 100%;
 	margin-top: 20px;
@@ -183,7 +347,7 @@ body {
 	background: transparent;
 	color: var(--text-muted);
 	cursor: pointer;
-	transition: background 0.15s, color 0.15s;
+	transition: background var(--transition), color var(--transition);
 	font-family: "Inter", sans-serif;
 }
 
@@ -192,7 +356,9 @@ body {
 	color: var(--text);
 }
 
-/* ── Apps grid ── */
+/* ═══════════════════════════════════════
+   APPS GRID
+═══════════════════════════════════════ */
 .apps-grid {
 	display: grid;
 	grid-template-columns: repeat(4, 1fr);
@@ -217,11 +383,6 @@ body {
 .app-btn-wrap:nth-child(11) { animation-delay: 0.74s; }
 .app-btn-wrap:nth-child(12) { animation-delay: 0.76s; }
 
-@keyframes appPop {
-	from { opacity: 0; transform: scale(0.8) translateY(10px); }
-	to   { opacity: 1; transform: scale(1) translateY(0); }
-}
-
 .app-btn {
 	width: 100%;
 	background: var(--card);
@@ -234,7 +395,7 @@ body {
 	justify-content: center;
 	gap: 6px;
 	cursor: pointer;
-	transition: background 0.18s, transform 0.15s, border-color 0.18s, box-shadow 0.18s;
+	transition: background var(--transition), transform 0.15s, border-color var(--transition), box-shadow var(--transition);
 	color: var(--text);
 	font-family: "Inter", sans-serif;
 	height: 80px;
@@ -248,39 +409,26 @@ body {
 	box-shadow: 0 6px 20px rgba(117,172,42,0.12);
 }
 
-.app-btn:not(:disabled):active {
-	transform: scale(0.97);
-}
+.app-btn:not(:disabled):active { transform: scale(0.97); }
+.app-btn:disabled { cursor: default; opacity: 0.75; }
 
-.app-btn:disabled {
-	cursor: default;
-	opacity: 0.75;
-}
-
-/* wiggle in edit mode */
 .apps-grid.editing .app-btn {
 	animation: wiggle 0.6s ease infinite;
-}
-
-@keyframes wiggle {
-	0%,100% { transform: rotate(0deg); }
-	25%      { transform: rotate(-1.5deg); }
-	75%      { transform: rotate(1.5deg); }
 }
 
 .app-icon {
 	width: 28px;
 	height: 28px;
-	border-radius: 6px;
-	overflow: hidden;
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	overflow: visible;
 }
 
 .app-icon svg {
-	width: 28px;
-	height: 28px;
+	width: 22px;
+	height: 22px;
+	overflow: visible;
 }
 
 .app-btn span {
@@ -291,14 +439,14 @@ body {
 	overflow: hidden;
 	text-overflow: ellipsis;
 	max-width: 100%;
-	transition: color 0.15s;
+	transition: color var(--transition);
 }
 
-.app-btn:not(:disabled):hover span {
-	color: var(--text);
-}
+.app-btn:not(:disabled):hover span { color: var(--text); }
 
-/* ── Remove button ── */
+/* ═══════════════════════════════════════
+   REMOVE BUTTON
+═══════════════════════════════════════ */
 .remove-btn {
 	position: absolute;
 	top: -6px;
@@ -316,7 +464,7 @@ body {
 	align-items: center;
 	justify-content: center;
 	padding: 0;
-	transition: all 0.15s;
+	transition: all var(--transition);
 	animation: popIn 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
@@ -325,12 +473,9 @@ body {
 	transform: scale(1.2);
 }
 
-@keyframes popIn {
-	from { transform: scale(0); }
-	to   { transform: scale(1); }
-}
-
-/* ── Add form ── */
+/* ═══════════════════════════════════════
+   ADD FORM
+═══════════════════════════════════════ */
 .add-form {
 	margin-top: 12px;
 	background: rgba(20,20,20,0.92);
@@ -340,11 +485,6 @@ body {
 	backdrop-filter: blur(12px);
 	animation: slideDown 0.3s ease;
 	box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-}
-
-@keyframes slideDown {
-	from { opacity: 0; transform: translateY(-8px); }
-	to   { opacity: 1; transform: translateY(0); }
 }
 
 .add-form-row {
@@ -374,7 +514,7 @@ body {
 	font-family: "Inter", sans-serif;
 	font-size: 13px;
 	outline: none;
-	transition: all 0.2s;
+	transition: all var(--transition);
 	caret-color: var(--primary);
 }
 
@@ -384,9 +524,7 @@ body {
 	box-shadow: 0 0 0 3px rgba(117,172,42,0.08);
 }
 
-.add-form-row input::placeholder {
-	color: rgba(255,255,255,0.2);
-}
+.add-form-row input::placeholder { color: rgba(255,255,255,0.2); }
 
 .add-form-actions {
 	display: flex;
@@ -404,7 +542,7 @@ body {
 	padding: 7px 16px;
 	border-radius: 6px;
 	cursor: pointer;
-	transition: all 0.2s;
+	transition: all var(--transition);
 }
 
 .cancel-btn:hover {
@@ -422,7 +560,7 @@ body {
 	padding: 7px 18px;
 	border-radius: 6px;
 	cursor: pointer;
-	transition: all 0.2s;
+	transition: all var(--transition);
 	box-shadow: 0 4px 14px var(--primary-glow);
 }
 
@@ -432,7 +570,9 @@ body {
 	filter: brightness(1.1);
 }
 
-/* ── Frame ── */
+/* ═══════════════════════════════════════
+   FRAME
+═══════════════════════════════════════ */
 #sj-frame {
 	border: none;
 	position: fixed;
@@ -444,47 +584,70 @@ body {
 	animation: frameReveal 0.4s ease;
 }
 
-@keyframes frameReveal {
-	from { opacity: 0; }
-	to   { opacity: 1; }
+/* ═══════════════════════════════════════
+   ROBLOX ICON
+═══════════════════════════════════════ */
+.roblox-icon {
+	width: 22px;
+	height: 22px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 
-/* ── Utility ── */
+.roblox-diamond {
+	width: 17px;
+	height: 17px;
+	background: #fff;
+	border-radius: 3px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transform: rotate(45deg);
+}
+
+.roblox-hole {
+	width: 7px;
+	height: 7px;
+	background: #141414;
+	border-radius: 2px;
+}
+
+/* ═══════════════════════════════════════
+   KEYFRAMES
+═══════════════════════════════════════ */
 @keyframes fadeUp {
 	from { opacity: 0; transform: translateY(16px); }
 	to   { opacity: 1; transform: translateY(0); }
 }
 
-/* scrollbar */
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: rgba(255,255,255,0.04); border-radius: 3px; }
-::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.25); }
-
-/* ── Roblox icon ── */
-.roblox-icon {
-	width: 22px; height: 22px;
-	display: flex; align-items: center; justify-content: center;
-}
-.roblox-diamond {
-	width: 17px; height: 17px;
-	background: #fff; border-radius: 3px;
-	display: flex; align-items: center; justify-content: center;
-	transform: rotate(45deg);
-}
-.roblox-hole {
-	width: 7px; height: 7px;
-	background: #141414; border-radius: 2px;
+@keyframes glowPulse {
+	0%, 100% { opacity: 0.2; }
+	50%       { opacity: 0.45; }
 }
 
-/* ── App icon sizing fix (bare SVGs, no rect bg) ── */
-.app-icon {
-	width: 28px; height: 28px;
-	display: flex; align-items: center; justify-content: center;
-	overflow: visible;
+@keyframes appPop {
+	from { opacity: 0; transform: scale(0.8) translateY(10px); }
+	to   { opacity: 1; transform: scale(1) translateY(0); }
 }
 
-.app-icon svg {
-	width: 22px; height: 22px;
-	overflow: visible;
+@keyframes wiggle {
+	0%,100% { transform: rotate(0deg); }
+	25%      { transform: rotate(-1.5deg); }
+	75%      { transform: rotate(1.5deg); }
+}
+
+@keyframes popIn {
+	from { transform: scale(0); }
+	to   { transform: scale(1); }
+}
+
+@keyframes slideDown {
+	from { opacity: 0; transform: translateY(-8px); }
+	to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes frameReveal {
+	from { opacity: 0; }
+	to   { opacity: 1; }
 }
