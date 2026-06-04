@@ -21,6 +21,12 @@ const error = document.getElementById("sj-error");
  */
 const errorCode = document.getElementById("sj-error-code");
 
+window.addEventListener("beforeunload", (event) => {
+	// Prompt the user before leaving the page.
+	event.preventDefault();
+	event.returnValue = "";
+});
+
 const { ScramjetController } = $scramjetLoadController();
 const scramjet = new ScramjetController({
 	files: {
