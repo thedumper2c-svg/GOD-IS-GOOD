@@ -248,7 +248,7 @@
 				return atob(decodeURIComponent(q));
 			}
 			// /scramjet/https%3A%2F%2F... or similar scramjet prefix paths
-			const scramPrefixes = ["/scramjet/", "/scram/", "/proxy/"];
+			const scramPrefixes = ["/scramjet/", "/scram/", "/assest/", "/proxy/"];
 			for (const prefix of scramPrefixes) {
 				if (u.pathname.startsWith(prefix)) {
 					const decoded = decodeURIComponent(u.pathname.slice(prefix.length));

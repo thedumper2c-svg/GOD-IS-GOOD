@@ -40,9 +40,13 @@ fastify.register(fastifyStatic, {
 	decorateReply: true,
 });
 
+fastify.get("/assest/kedirjitogijtoi.js", (request, reply) => {
+	return reply.sendFile("scramjet.all.js", { root: scramjetPath });
+});
+
 fastify.register(fastifyStatic, {
 	root: scramjetPath,
-	prefix: "/scram/",
+	prefix: "/assest/",
 	decorateReply: false,
 });
 
@@ -54,7 +58,7 @@ fastify.register(fastifyStatic, {
 
 fastify.register(fastifyStatic, {
 	root: baremuxPath,
-	prefix: "/baremux/",
+	prefix: "/bare/",
 	decorateReply: false,
 });
 
