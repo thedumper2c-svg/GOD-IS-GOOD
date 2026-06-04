@@ -17,33 +17,42 @@
 		<meta name="description" content="LinguaPath teaches Spanish, French, German, Italian, Mandarin, Japanese, and more through bite-sized lessons, conversation drills, and CEFR-aligned practice tests.">
 	</head>
 	<body>
-		<div id="root"></div>
-		<div id="bqtjye" style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden">
-			<h1 id="asdbwy">LinguaPath Lessons</h1>
-			<button id="sabyrl">Start a Lesson</button>
-			<p id="figjhs">Language Learning for Every Level</p>
-		</div>
-		<div style="display:none" aria-hidden="true">
-			<h1>LinguaPath — Learn a New Language One Conversation at a Time</h1>
-		</div>
-
-		<!-- Constellation background -->
+		<div class="background-layers"></div>
 		<canvas id="constellation-canvas"></canvas>
 
 		<div class="main-wrapper">
-			<h1 class="site-title" data-text="Areoy Proxy">Kamsi Obierika Proxy</h1>
-			<form id="sj-form" class="search-wrapper">
-				<input id="sj-search-engine" value="https://duckduckgo.com/?q=%s" type="hidden" />
-				<input id="sj-address" type="text" placeholder="search..." autocomplete="off" />
-			</form>
-			<div class="error-wrapper">
-				<p id="sj-error"></p>
-				<pre id="sj-error-code"></pre>
-			</div>
-			<div class="quick-apps">
+			<header class="site-header">
+				<div class="brand">
+					<img src="sj.png" alt="Proxy logo" class="brand-mark" />
+					<div>
+						<p class="eyebrow">Kamsi Obierika Proxy</p>
+						<h1 class="hero-title">A premium proxy with a bold, cinematic look.</h1>
+					</div>
+				</div>
+				<span class="badge">Powered by Scramjet</span>
+			</header>
+
+			<section class="hero-card">
+				<div class="hero-copy">
+					<p class="hero-subtitle">Browse with style, speed, and privacy. This is your modern proxy gateway for YouTube, web access, and smart navigation.</p>
+				</div>
+
+				<form id="sj-form" class="search-wrapper">
+					<input id="sj-search-engine" value="https://duckduckgo.com/?q=%s" type="hidden" />
+					<input id="sj-address" type="text" placeholder="Type a site or search term..." autocomplete="off" />
+					<button type="submit" class="search-btn">Go</button>
+				</form>
+
+				<div class="error-wrapper">
+					<p id="sj-error"></p>
+					<pre id="sj-error-code"></pre>
+				</div>
+			</section>
+
+			<section class="quick-apps">
 				<div class="quick-apps-header">
 					<span class="quick-apps-label">Quick apps</span>
-					<button class="edit-btn" id="edit-toggle">Edit</button>
+					<button class="edit-btn" id="edit-toggle">Manage</button>
 				</div>
 				<div class="apps-grid" id="apps-grid"></div>
 				<div class="add-form" id="add-form" style="display:none;">
@@ -60,8 +69,16 @@
 						<button class="save-btn" id="add-save">Save</button>
 					</div>
 				</div>
-			</div>
+			</section>
 		</div>
+
+		<footer>
+			<div class="footer-copy">A custom proxy experience with vivid design and modern browser support.</div>
+			<div class="footer-links">
+				<a href="credits.html">Credits</a>
+				<a href="404.html">Not found page</a>
+			</div>
+		</footer>
 
 		<!-- Constellation script -->
 		<script>
