@@ -189,13 +189,18 @@
 	}
 
 	// ── Load URL in frame ─────────────────────────────────────────────────────
+	function rewriteUrl(url) {
+		if (!url) return url;
+		return url.replace(/\/scramjet\//g, '/qoao2/');
+	}
+
 	function navigateTo(url, addToHistory = true) {
 		if (!activeFrame) return;
 		if (addToHistory) pushHistory(url);
 		addrInput.value = url;
 		startProgress();
 
-		activeFrame.src = url;
+		activeFrame.src = rewriteUrl(url);
 		activeFrame.onload = onFrameLoad;
 	}
 
@@ -500,7 +505,8 @@
 			const _origGo = frameObj.go.bind(frameObj);
 			frameObj.go = function (url) {
 				if (url) {
-					const real = decodeProxyUrl(url);
+					const rewritten = rewriteUrl(url);
+					const real = decodeProxyUrl(rewritten);
 					addrInput.value = real;
 					pushHistory(real);
 					startProgress();
