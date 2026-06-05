@@ -21,6 +21,103 @@ const error = document.getElementById("sj-error");
  */
 const errorCode = document.getElementById("sj-error-code");
 
+// Smart search suggestions
+const searchSuggestions = [
+	"john bolton",
+	"jalen brunson",
+	"june 2026 calendar",
+	"jetblue airlines",
+	"jira",
+	"jcpenney",
+	"jimmy john's",
+	"join my quiz",
+	"youtube",
+	"gmail",
+	"google drive",
+	"stack overflow",
+	"github",
+	"twitter",
+	"reddit",
+	"wikipedia",
+	"amazon",
+	"netflix",
+	"discord",
+	"slack",
+	"figma",
+	"notion",
+	"trello"
+];
+
+let suggestionsDropdown = null;
+
+function createSuggestionsDropdown() {
+	const dropdown = document.createElement("div");
+	dropdown.id = "sj-suggestions";
+	dropdown.className = "search-suggestions";
+	dropdown.style.cssText = `
+		position: absolute;
+		top: 100%;
+		left: 0;
+		right: 0;
+		background: rgba(4, 2, 15, 0.95);
+		border: 1px solid rgba(255, 255, 255, 0.1);
+		border-top: none;
+		border-radius: 0 0 8px 8px;
+		max-height: 300px;
+		overflow-y: auto;
+		z-index: 1000;
+		display: none;
+	`;
+	return dropdown;
+}
+
+function updateSuggestions(input) {
+	if (!suggestionsDropdown) return;
+	
+	const trimmed = input.trim().toLowerCase();
+	if (!trimmed) {
+		suggestionsDropdown.display = "none";
+		return;
+	}
+	
+	const filtered = searchSuggestions.filter(s => s.toLowerCase().includes(trimmed));
+	
+	if (filtered.length === 0) {
+		suggestionsDropdown.style.display = "none";
+		return;
+	}
+	
+	suggestionsDropdown.innerHTML = filtered.map(suggestion => `
+		<div class="suggestion-item" style="
+			padding: 12px 16px;
+			cursor: pointer;
+			color: rgba(232, 224, 255, 0.8);
+			border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+			transition: background 0.2s;
+		" data-suggestion="${suggestion}">
+			${suggestion}
+		</div>
+	`).join("");
+	
+	suggestionsDropdown.style.display = "block";
+	
+	// Add click listeners to suggestions
+	suggestionsDropdown.querySelectorAll(".suggestion-item").forEach(item => {
+		item.addEventListener("click", () => {
+			address.value = item.dataset.suggestion;
+			suggestionsDropdown.style.display = "none";
+		});
+		
+		item.addEventListener("mouseover", () => {
+			item.style.background = "rgba(255, 255, 255, 0.07)";
+		});
+		
+		item.addEventListener("mouseout", () => {
+			item.style.background = "transparent";
+		});
+	});
+}
+
 const { ScramjetController } = $scramjetLoadController();
 const scramjet = new ScramjetController({
 	files: {
@@ -72,6 +169,33 @@ form.addEventListener("submit", (event) => {
 	// search() resolves it to a full URL inside the proxy worker
 	const b64 = btoa(unescape(encodeURIComponent(input)));
 	location.href = `${location.origin}/?route=${encodeURIComponent(`/search?query=${encodeURIComponent(b64)}&v="1"`)}`;
+});
+
+// Initialize suggestions dropdown and add event listeners
+document.addEventListener("DOMContentLoaded", () => {
+	const formWrapper = form.parentElement;
+	suggestionsDropdown = createSuggestionsDropdown();
+	formWrapper.style.position = "relative";
+	formWrapper.appendChild(suggestionsDropdown);
+	
+	address.addEventListener("input", (e) => {
+		updateSuggestions(e.target.value);
+	});
+	
+	address.addEventListener("focus", () => {
+		if (address.value.trim()) {
+			updateSuggestions(address.value);
+		}
+	});
+	
+	address.addEventListener("blur", () => {
+		// Delay to allow suggestion click to register
+		setTimeout(() => {
+			if (suggestionsDropdown) {
+				suggestionsDropdown.style.display = "none";
+			}
+		}, 200);
+	});
 });
 
 // Auto-navigate if ?route= param is present
